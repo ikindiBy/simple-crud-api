@@ -1,9 +1,10 @@
 const { persons } = require('../persons');
 const { isIdValid } = require('../utils/validateId');
+const { URL_PARTS_WITH_ID, URL_PARTS_WITHOUT_ID } = require('../constants/urlParams');
 
 const get = (req, res) => {
   const urlParts = req.url.split('/');
-  if (urlParts[1] === 'person' && urlParts.length === 2) {
+  if (urlParts.length === URL_PARTS_WITHOUT_ID) {
     try {
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/plain');
@@ -13,7 +14,7 @@ const get = (req, res) => {
       res.write(`Cannot get persons due to the errors on server side.`)
       res.end()
     }
-  } else if (urlParts[1] === 'person' && urlParts[2] && urlParts.length === 3) {
+  } else if (urlParts[2] && urlParts.length === URL_PARTS_WITH_ID) {
     const idFromRequest = urlParts[2];
     try {
       if (!isIdValid(idFromRequest)) {
@@ -34,7 +35,7 @@ const get = (req, res) => {
       }
     } catch (err) {
       res.statusCode = 500;
-      res.write(`Cannot get a person due to the errors on server side.`);
+      res.write(`Cannot get a person with id = ${idFromRequest} due to the errors on server side.`);
       res.end();
     }
   } else {

@@ -2,10 +2,11 @@ const { persons } = require('../persons');
 const { v4: uuid } = require('uuid');
 
 const { formResponse400, formResponse500 } = require('../utils/formResponse');
+const { URL_PARTS_WITHOUT_ID } = require('../constants/urlParams');
 
 const post = (req, res) => {
   const urlParts = req.url.split('/');
-  if (urlParts[1] === 'person' && urlParts.length === 2) {
+  if (urlParts.length === URL_PARTS_WITHOUT_ID) {
     try {
       let body = '';
       req.on('data', chunk => {
@@ -48,7 +49,7 @@ const post = (req, res) => {
   } else {
     formResponse400({
       res,
-      writeContent: `Cannot post data by ${req.url}`,
+      writeContent: `Cannot post data by ${req.url}. Looks like incorrect URL.`,
     });
   }
 }

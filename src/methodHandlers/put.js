@@ -2,7 +2,8 @@ const { persons } = require('../persons');
 
 const { formResponse400, formResponse500 } = require('../utils/formResponse');
 const { isIdValid } = require('../utils/validateId');
-const { validatePersonFields } = require('../utils/validateId');
+const { validatePersonFields } = require('../utils/validatePerson');
+const { URL_PARTS_WITH_ID } = require('../constants/urlParams');
 
 const put = (req, res) => {
   const urlParts = req.url.split('/');
@@ -12,13 +13,15 @@ const put = (req, res) => {
     res.statusCode = 400;
     res.write('ID should be provided.');
     res.end();
+    return;
   }
-  if (urlParts[1] === 'person' && urlParts.length === 3) {
+  if (urlParts.length === URL_PARTS_WITH_ID) {
     try {
       if (!isIdValid(idFromRequest)) {
         res.statusCode = 400;
         res.write(`Invalid ID.`);
         res.end();
+        return;
       }
 
       const personById = persons.find(({ id }) => id === idFromRequest);
