@@ -1,0 +1,4 @@
+const URL_PARTS_WITH_ID = 3;
+const URL_PARTS_WITHOUT_ID = 2;
+
+module.exports = { URL_PARTS_WITH_ID, URL_PARTS_WITHOUT_ID };
