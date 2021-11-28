@@ -2,6 +2,7 @@ const http = require('http');
 
 const { get } = require('./methodHandlers/get');
 const { post } = require('./methodHandlers/post');
+const { put } = require('./methodHandlers/put');
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -19,6 +20,7 @@ server.on('request', (req, res) => {
       break
 
     case "PUT":
+      put(req, res);
       break
 
     case "DELETE":
