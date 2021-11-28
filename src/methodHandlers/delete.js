@@ -2,9 +2,8 @@ const { persons } = require('../persons');
 
 const { formResponse400, formResponse500 } = require('../utils/formResponse');
 const { isIdValid } = require('../utils/validateId');
-const { validatePersonFields } = require('../utils/validateId');
 
-const put = (req, res) => {
+const del = (req, res) => {
   const urlParts = req.url.split('/');
   const idFromRequest = urlParts[2];
 
@@ -27,37 +26,23 @@ const put = (req, res) => {
         res.write(`No user with such ID.`);
         res.end();
       } else {
-        let body = '';
-        req.on('data', chunk => {
-          body += chunk.toString();
-        });
-        req.on('end', () => {
-          const data = JSON.parse(body);
-
-          validatePersonFields(data, res);
-
-          const newPerson = {
-            ...data,
-            id: idFromRequest,
-          };
-          persons.splice(idFromRequest, 1, newPerson);
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'text/plain');
-          res.end(JSON.stringify(newPerson));
-        });
+        persons.splice(idFromRequest, 1);
+        res.statusCode = 204;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end();
       }
     } catch (err) {
       formResponse500({
         res,
-        writeContent: 'Cannot put person due to the error on server side.' + err,
+        writeContent: 'Cannot delete a person due to the error on server side.' + err,
       });
     }
   } else {
     formResponse400({
       res,
-      writeContent: `Cannot put data by ${req.url}`,
+      writeContent: `Cannot delete data by ${req.url}`,
     });
   }
 }
 
-module.exports = { put };
+module.exports = { del };
